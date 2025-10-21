@@ -37,6 +37,16 @@ dependencies:
   flutter_riverpod: ^2.5.1
   shared_preferences: ^2.2.3
 
+  # AI và Game Engine packages
+  collection: ^1.18.0  # Cấu trúc dữ liệu tối ưu cho AI
+  rxdart: ^0.27.7      # Reactive programming cho AI async
+  vector_math: ^2.1.4   # Toán học vector cho AI calculations
+
+  # UI Enhancement packages
+  animations: ^2.0.11   # Animations cho game effects
+  flutter_animate: ^4.5.0  # Advanced animations
+  confetti: ^0.7.0      # Confetti effects khi thắng
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
