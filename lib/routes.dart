@@ -4,6 +4,7 @@ import 'screens/rubik_home_screen.dart';
 import 'screens/pick_colors_screen.dart';
 import 'screens/solve_screen.dart';
 import 'screens/tetris_screen.dart';
+import 'screens/game_caro.dart';
 
 class AppRoutes {
   static const home = '/';
@@ -12,6 +13,7 @@ class AppRoutes {
   static const pick = '/pick';
   static const solve = '/solve';
   static const tetris = '/tetris';
+  static const caro = '/caro';
 
   static Map<String, WidgetBuilder> routes = {
     home: (context) => const MainMenuScreen(),
@@ -20,5 +22,6 @@ class AppRoutes {
     pick: (context) => const PickColorsScreen(),
     solve: (context) => const SolveScreen(),
     tetris: (context) => const TetrisScreen(),
+    caro: (context) => const ManHinhGameCaro(),
   };
 }
