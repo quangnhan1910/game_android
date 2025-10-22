@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/cube_provider.dart';
-import '../models/cube_solvers.dart';
-import '../screens/widgets.dart';
+import '../../providers/cube_provider.dart';
+import '../../models/rubik/cube_solvers.dart';
+import 'widgets.dart';
 
 class SolveScreen extends ConsumerStatefulWidget {
   const SolveScreen({super.key});

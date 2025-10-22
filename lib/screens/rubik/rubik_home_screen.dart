@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../routes.dart';
+import '../../routes.dart';
 
 class rubikHomeScreen extends StatelessWidget {
   const rubikHomeScreen({super.key});

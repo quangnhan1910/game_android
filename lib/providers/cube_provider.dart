@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/cube_models.dart';
+import '../models/rubik/cube_models.dart';
 
 final cubeProvider = StateNotifierProvider<CubeNotifier, CubeState>((ref) {
   return CubeNotifier();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../routes.dart';
+import '../../routes.dart';
 
 // Man hinh chinh cua tro choi Caro voi may (AI)
 class ManHinhGameCaro extends StatefulWidget {

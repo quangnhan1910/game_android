@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../models/sudoku_board.dart';
-import '../screens/sudoku_grid.dart';
-import '../screens/number_pad.dart';
-import '../screens/action_buttons.dart';
+import '../../models/sudoku_board.dart';
+import '../../screens/sudoku/sudoku_grid.dart';
+import '../../screens/sudoku/number_pad.dart';
+import '../../screens/sudoku/action_buttons.dart';
 
 class GameSudoku extends StatefulWidget {
   final String difficulty;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/cube_models.dart';
+import '../../models/rubik/cube_models.dart';
 
 /// Ô sticker 1×1
 class StickerCell extends StatelessWidget {

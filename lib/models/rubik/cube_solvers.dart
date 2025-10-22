@@ -1,5 +1,5 @@
 import 'cube_models.dart';
-import '../services/solver_isolate.dart';
+import '../../services/solver_isolate.dart';
 import 'kociemba.dart';
 
 class CubeValidationResult {
