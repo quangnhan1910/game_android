@@ -34,7 +34,7 @@ class MainMenuScreen extends StatelessWidget {
                     color: Colors.deepPurple,
                   ),
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
 
                 // Rubik Game Button
                 Card(
@@ -48,7 +48,7 @@ class MainMenuScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(30),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         gradient: LinearGradient(
@@ -57,12 +57,12 @@ class MainMenuScreen extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.extension, size: 60, color: Colors.white),
+                          Icon(Icons.extension, size: 40, color: Colors.white),
                           const SizedBox(height: 15),
                           const Text(
                             'Rubik 3×3',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -81,7 +81,7 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
 
                 // Tetris Game Button
                 Card(
@@ -94,7 +94,7 @@ class MainMenuScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(30),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         gradient: LinearGradient(
@@ -103,12 +103,12 @@ class MainMenuScreen extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.grid_4x4, size: 60, color: Colors.white),
+                          Icon(Icons.grid_4x4, size: 40, color: Colors.white),
                           const SizedBox(height: 15),
                           const Text(
                             'Tetris',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -127,7 +127,56 @@ class MainMenuScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
+
+                // Sudoku Game Button
+                Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: InkWell(
+                    onTap: () => Navigator.pushNamed(context, AppRoutes.sudoku),
+                    borderRadius: BorderRadius.circular(15),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.indigo.shade300,
+                            Colors.teal.shade300,
+                          ],
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(Icons.grid_3x3, size: 40, color: Colors.white),
+                          const SizedBox(height: 15),
+                          const Text(
+                            'Sudoku',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Trò chơi số học',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
 
                 // Caro Game Button
                 Card(
@@ -140,7 +189,7 @@ class MainMenuScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(30),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         gradient: LinearGradient(
@@ -152,12 +201,12 @@ class MainMenuScreen extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.grid_on, size: 60, color: Colors.white),
+                          Icon(Icons.grid_on, size: 40, color: Colors.white),
                           const SizedBox(height: 15),
                           const Text(
                             'Caro vs AI',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
