@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/cube_models.dart';
-import '../providers/cube_provider.dart';
+import '../../models/rubik/cube_models.dart';
+import '../../providers/cube_provider.dart';
 import 'widgets.dart';
 
 class PickColorsScreen extends ConsumerStatefulWidget {

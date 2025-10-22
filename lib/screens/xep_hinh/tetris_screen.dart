@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
-import '../routes.dart';
+import '../../routes.dart';
 
 class TetrisScreen extends StatefulWidget {
   const TetrisScreen({super.key});

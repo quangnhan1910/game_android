@@ -20,209 +20,122 @@ class MainMenuScreen extends StatelessWidget {
             colors: [Colors.blue.shade50, Colors.purple.shade50],
           ),
         ),
-        child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              const Text(
+                'Chọn Game',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepPurple,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Grid layout cho 4 game
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 1.1,
+                  children: [
+                    // Rubik Game Button
+                    _buildGameCard(
+                      context,
+                      icon: Icons.extension,
+                      title: 'Rubik 3×3',
+                      subtitle: 'Giải khối Rubik',
+                      colors: [Colors.orange.shade300, Colors.red.shade300],
+                      route: AppRoutes.rubikHome,
+                    ),
+
+                    // Tetris Game Button
+                    _buildGameCard(
+                      context,
+                      icon: Icons.grid_4x4,
+                      title: 'Tetris',
+                      subtitle: 'Xếp hình cổ điển',
+                      colors: [Colors.green.shade300, Colors.blue.shade300],
+                      route: AppRoutes.tetris,
+                    ),
+
+                    // Sudoku Game Button
+                    _buildGameCard(
+                      context,
+                      icon: Icons.grid_3x3,
+                      title: 'Sudoku',
+                      subtitle: 'Trò chơi số học',
+                      colors: [Colors.indigo.shade300, Colors.teal.shade300],
+                      route: AppRoutes.sudoku,
+                    ),
+
+                    // Caro Game Button
+                    _buildGameCard(
+                      context,
+                      icon: Icons.grid_on,
+                      title: 'Caro vs AI',
+                      subtitle: 'Trí tuệ nhân tạo',
+                      colors: [Colors.purple.shade300, Colors.pink.shade300],
+                      route: AppRoutes.caro,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGameCard(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required List<Color> colors,
+    required String route,
+  }) {
+    return Card(
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: () => Navigator.pushNamed(context, route),
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: colors,
+            ),
+          ),
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Chọn Game',
-                  style: TextStyle(
-                    fontSize: 32,
+                Icon(icon, size: 32, color: Colors.white),
+                const SizedBox(height: 8),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.deepPurple,
+                    color: Colors.white,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 30),
-
-                // Rubik Game Button
-                Card(
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: InkWell(
-                    onTap: () =>
-                        Navigator.pushNamed(context, AppRoutes.rubikHome),
-                    borderRadius: BorderRadius.circular(15),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        gradient: LinearGradient(
-                          colors: [Colors.orange.shade300, Colors.red.shade300],
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(Icons.extension, size: 40, color: Colors.white),
-                          const SizedBox(height: 15),
-                          const Text(
-                            'Rubik 3×3',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Giải khối Rubik',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white70,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Tetris Game Button
-                Card(
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: InkWell(
-                    onTap: () => Navigator.pushNamed(context, AppRoutes.tetris),
-                    borderRadius: BorderRadius.circular(15),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        gradient: LinearGradient(
-                          colors: [Colors.green.shade300, Colors.blue.shade300],
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(Icons.grid_4x4, size: 40, color: Colors.white),
-                          const SizedBox(height: 15),
-                          const Text(
-                            'Tetris',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Xếp hình cổ điển',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white70,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Sudoku Game Button
-                Card(
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: InkWell(
-                    onTap: () => Navigator.pushNamed(context, AppRoutes.sudoku),
-                    borderRadius: BorderRadius.circular(15),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.indigo.shade300,
-                            Colors.teal.shade300,
-                          ],
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(Icons.grid_3x3, size: 40, color: Colors.white),
-                          const SizedBox(height: 15),
-                          const Text(
-                            'Sudoku',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Trò chơi số học',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white70,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Caro Game Button
-                Card(
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: InkWell(
-                    onTap: () => Navigator.pushNamed(context, AppRoutes.caro),
-                    borderRadius: BorderRadius.circular(15),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.purple.shade300,
-                            Colors.pink.shade300,
-                          ],
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(Icons.grid_on, size: 40, color: Colors.white),
-                          const SizedBox(height: 15),
-                          const Text(
-                            'Caro vs AI',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Trí tuệ nhân tạo',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white70,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: const TextStyle(fontSize: 12, color: Colors.white70),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),

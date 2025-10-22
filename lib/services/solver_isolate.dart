@@ -1,5 +1,5 @@
 import 'dart:isolate';
-import '../models/kociemba.dart';
+import '../models/rubik/kociemba.dart';
 
 class SolverIsolate {
   SolverIsolate._();
