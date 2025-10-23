@@ -35,7 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.5.1
-  shared_preferences: ^2.5.3
+  shared_preferences: ^2.2.3
 
   # AI và Game Engine packages
   collection: ^1.18.0  # Cấu trúc dữ liệu tối ưu cho AI
