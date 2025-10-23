@@ -112,4 +112,15 @@ class AuthService {
       return {"success": false, "message": "Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet của bạn."};
     }
   }
+
+  // Đăng xuất - xóa token khỏi SharedPreferences
+  Future<bool> logout() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('jwt_token');  // Xóa token
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

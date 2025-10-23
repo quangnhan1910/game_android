@@ -1,8 +1,78 @@
 import 'package:flutter/material.dart';
 import '../routes.dart';
+import '../utils/auth.dart';
+import 'auth/login_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
+
+  // Hàm xử lý logout
+  Future<void> _handleLogout(BuildContext context) async {
+    // Hiển thị dialog xác nhận
+    bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: const Row(
+            children: [
+              Icon(Icons.logout, color: Colors.orange),
+              SizedBox(width: 10),
+              Text('Xác nhận đăng xuất'),
+            ],
+          ),
+          content: const Text('Bạn có chắc chắn muốn đăng xuất?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Hủy'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Đăng xuất'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      // Thực hiện logout
+      bool success = await Auth.logout();
+      
+      if (success && context.mounted) {
+        // Chuyển về màn hình login và xóa toàn bộ lịch sử navigation
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          (Route<dynamic> route) => false,
+        );
+
+        // Hiển thị thông báo thành công
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: const [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 12),
+                Text('Đã đăng xuất thành công'),
+              ],
+            ),
+            backgroundColor: Colors.green[600],
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,6 +81,13 @@ class MainMenuScreen extends StatelessWidget {
         title: const Text('Game Collection'),
         centerTitle: true,
         backgroundColor: Colors.blue.shade100,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Đăng xuất',
+            onPressed: () => _handleLogout(context),
+          ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(

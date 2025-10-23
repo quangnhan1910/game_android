@@ -52,4 +52,9 @@ class Auth {
       };
     }
   }
+
+  // Đăng xuất
+  static Future<bool> logout() async {
+    return await _authService.logout();
+  }
 }
