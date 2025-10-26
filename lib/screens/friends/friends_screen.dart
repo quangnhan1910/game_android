@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/friend_models.dart';
 import '../../services/friend_service.dart';
+import '../messages/chat_screen.dart';
 
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({super.key});
@@ -15,16 +16,19 @@ class _FriendsScreenState extends State<FriendsScreen> {
   
   List<UserSearchResult> _searchResults = [];
   List<FriendRequest> _pendingRequests = [];
+  List<SentFriendRequest> _sentRequests = [];
   List<Friend> _friends = [];
   
   bool _isSearching = false;
   bool _isLoadingRequests = false;
+  bool _isLoadingSentRequests = false;
   bool _isLoadingFriends = false;
   
   @override
   void initState() {
     super.initState();
     _loadPendingRequests();
+    _loadSentRequests();
     _loadFriends();
   }
 
@@ -47,6 +51,24 @@ class _FriendsScreenState extends State<FriendsScreen> {
         setState(() {
           _pendingRequests = []; // Clear danh sách khi có lỗi
           _isLoadingRequests = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _loadSentRequests() async {
+    setState(() => _isLoadingSentRequests = true);
+    final result = await _friendService.getSentFriendRequests();
+    if (result['success'] && mounted) {
+      setState(() {
+        _sentRequests = result['data'] as List<SentFriendRequest>;
+        _isLoadingSentRequests = false;
+      });
+    } else {
+      if (mounted) {
+        setState(() {
+          _sentRequests = []; // Clear danh sách khi có lỗi
+          _isLoadingSentRequests = false;
         });
       }
     }
@@ -101,6 +123,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
         ),
       );
       if (result['success']) {
+        _loadSentRequests();
         _searchUsers(_searchController.text); // Refresh search
       }
     }
@@ -133,6 +156,25 @@ class _FriendsScreenState extends State<FriendsScreen> {
       );
       if (result['success']) {
         _loadPendingRequests();
+      }
+    }
+  }
+
+  Future<void> _cancelRequest(int id) async {
+    final result = await _friendService.cancelFriendRequest(id);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result['message']),
+          backgroundColor: result['success'] ? Colors.green : Colors.red,
+        ),
+      );
+      if (result['success']) {
+        _loadSentRequests();
+        // Refresh search nếu đang tìm kiếm
+        if (_searchController.text.isNotEmpty) {
+          _searchUsers(_searchController.text);
+        }
       }
     }
   }
@@ -277,6 +319,50 @@ class _FriendsScreenState extends State<FriendsScreen> {
                     Divider(color: Colors.grey[300], thickness: 1, height: 20),
                   ],
 
+                  // Lời mời đã gửi
+                  if (_sentRequests.isNotEmpty && !_isLoadingSentRequests) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                'Lời mời đã gửi',
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  '${_sentRequests.length}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    // Danh sách lời mời đã gửi
+                    ...(_sentRequests.map((request) => _buildSentRequestTile(request)).toList()),
+
+                    Divider(color: Colors.grey[300], thickness: 1, height: 20),
+                  ],
+
                   // Bạn bè
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -354,15 +440,60 @@ class _FriendsScreenState extends State<FriendsScreen> {
           user.username,
           style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         ),
-        trailing: user.friendshipStatus == 'friend'
-            ? const Icon(Icons.check, color: Colors.blue)
-            : user.friendshipStatus == 'pending'
-                ? const Text('Đang chờ', style: TextStyle(color: Colors.orange))
-                : IconButton(
-                    icon: const Icon(Icons.person_add, color: Colors.blue),
-                    onPressed: () => _sendFriendRequest(user.username),
-                  ),
+        trailing: _buildUserActionButton(user),
       ),
+    );
+  }
+
+  Widget _buildUserActionButton(UserSearchResult user) {
+    if (user.isFriend) {
+      return const Icon(Icons.check_circle, color: Colors.green);
+    }
+    
+    if (user.hasPendingRequest) {
+      if (user.pendingRequestDirection == 'sent') {
+        // User has sent a request - show cancel button
+        // Find the request ID from the sent requests list
+        final sentRequest = _sentRequests.firstWhere(
+          (req) => req.receiverUsername == user.username,
+          orElse: () => SentFriendRequest(
+            id: 0,
+            receiverUsername: '',
+            createdAt: DateTime.now(),
+          ),
+        );
+        
+        return ElevatedButton.icon(
+          icon: const Icon(Icons.cancel_outlined, size: 16),
+          label: const Text('Hủy', style: TextStyle(fontSize: 12)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.orange,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          onPressed: sentRequest.id > 0 ? () => _cancelRequest(sentRequest.id) : null,
+        );
+      } else if (user.pendingRequestDirection == 'received') {
+        // User received a request - show indicator
+        return const Chip(
+          label: Text('Đã gửi cho bạn', style: TextStyle(fontSize: 12)),
+          backgroundColor: Colors.blue,
+          labelStyle: TextStyle(color: Colors.white),
+          padding: EdgeInsets.symmetric(horizontal: 4),
+        );
+      }
+    }
+    
+    // No relationship - show add friend button
+    return IconButton(
+      icon: const Icon(Icons.person_add, color: Colors.blue),
+      onPressed: () => _sendFriendRequest(user.username),
     );
   }
 
@@ -418,6 +549,50 @@ class _FriendsScreenState extends State<FriendsScreen> {
     );
   }
 
+  Widget _buildSentRequestTile(SentFriendRequest request) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.orange[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange[200]!, width: 1),
+      ),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: Colors.orange[100],
+          child: request.receiverInitials != null
+              ? Text(
+                  request.receiverInitials!,
+                  style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+                )
+              : const Icon(Icons.person, color: Colors.orange),
+        ),
+        title: Text(
+          request.receiverUsername,
+          style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+        ),
+        subtitle: const Text(
+          'Đang chờ chấp nhận',
+          style: TextStyle(color: Colors.grey, fontSize: 12),
+        ),
+        trailing: ElevatedButton.icon(
+          icon: const Icon(Icons.cancel_outlined, size: 18),
+          label: const Text('Hủy'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.grey[300],
+            foregroundColor: Colors.black87,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          ),
+          onPressed: () => _cancelRequest(request.id),
+        ),
+      ),
+    );
+  }
+
   Widget _buildFriendTile(Friend friend) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -440,16 +615,36 @@ class _FriendsScreenState extends State<FriendsScreen> {
           friend.username,
           style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         ),
-        trailing: PopupMenuButton(
-          icon: const Icon(Icons.more_horiz, color: Colors.black87),
-          color: Colors.white,
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              child: const Text('Hủy kết bạn', style: TextStyle(color: Colors.red)),
-              onTap: () => Future.delayed(
-                const Duration(milliseconds: 100),
-                () => _unfriend(friend.username),
-              ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.chat_bubble_outline, color: Colors.blue),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatScreen(
+                      friendUsername: friend.username,
+                      friendInitials: friend.initials,
+                    ),
+                  ),
+                );
+              },
+              tooltip: 'Nhắn tin',
+            ),
+            PopupMenuButton(
+              icon: const Icon(Icons.more_horiz, color: Colors.black87),
+              color: Colors.white,
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: const Text('Hủy kết bạn', style: TextStyle(color: Colors.red)),
+                  onTap: () => Future.delayed(
+                    const Duration(milliseconds: 100),
+                    () => _unfriend(friend.username),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

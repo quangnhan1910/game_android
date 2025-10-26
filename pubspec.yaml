@@ -36,6 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.5.1
   shared_preferences: ^2.2.3
+  provider: ^6.1.1
+  intl: ^0.18.1
+  timeago: ^3.6.1
 
   # AI và Game Engine packages
   collection: ^1.18.0  # Cấu trúc dữ liệu tối ưu cho AI

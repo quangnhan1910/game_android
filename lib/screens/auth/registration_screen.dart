@@ -191,14 +191,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 // Form đăng ký
                 _buildInputField(
                   controller: _usernameController,
-                  label: 'Tên đăng nhập', // Bỏ hint
+                  label: 'Tên người dùng', // Bỏ hint
                   icon: Icons.person_outline,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập tên đăng nhập';
+                      return 'Vui lòng nhập tên người dùng';
                     }
                     if (value.length < 3) {
-                      return 'Tên đăng nhập phải có ít nhất 3 ký tự';
+                      return 'Tên người dùng phải có ít nhất 3 ký tự';
                     }
                     return null;
                   },
