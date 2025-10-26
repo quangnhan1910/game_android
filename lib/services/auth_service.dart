@@ -18,6 +18,10 @@ class AuthService {
 
   Future<Map<String, dynamic>> login(String emailOrPhone, String password) async {
     try {
+      print('\n[AuthService] ===== LOGIN START =====');
+      print('[AuthService] API URL: $apiUrl');
+      print('[AuthService] Email/Phone: $emailOrPhone');
+      
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {"Content-Type": "application/json"},
@@ -27,6 +31,9 @@ class AuthService {
           "Password": password,
         }),
       ).timeout(timeoutDuration);
+
+      print('[AuthService] Response Status: ${response.statusCode}');
+      print('[AuthService] Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -43,17 +50,39 @@ class AuthService {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('jwt_token', token);  // Lưu token
 
+        print('[AuthService] Login SUCCESS ✓');
+        print('[AuthService] ===== LOGIN END =====\n');
         return {
           "success": true,
           "token": token,
           "decodedToken": decodedToken,
         };
       } else {
-        // If status code is not 200, treat it as login failure
-        return {"success": false, "message": "Đăng nhập thất bại. Mã lỗi: ${response.statusCode}"};
+        // Xử lý các mã lỗi cụ thể
+        print('[AuthService] Login FAILED: Status ${response.statusCode}');
+        print('[AuthService] ===== LOGIN END =====\n');
+        
+        String errorMessage;
+        if (response.statusCode == 401) {
+          // Unauthorized - Sai tên đăng nhập hoặc mật khẩu
+          errorMessage = "Sai tên đăng nhập hoặc mật khẩu.";
+        } else if (response.statusCode == 400) {
+          // Bad Request - Dữ liệu không hợp lệ
+          errorMessage = "Thông tin đăng nhập không hợp lệ.";
+        } else if (response.statusCode == 500) {
+          // Server Error
+          errorMessage = "Lỗi máy chủ. Vui lòng thử lại sau.";
+        } else {
+          // Các lỗi khác
+          errorMessage = "Đăng nhập thất bại. Vui lòng thử lại.";
+        }
+        
+        return {"success": false, "message": errorMessage};
       }
     } catch (e) {
       // Handle network or parsing errors
+      print('[AuthService] Login ERROR: $e');
+      print('[AuthService] ===== LOGIN END =====\n');
       return {"success": false, "message": "Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet của bạn."};
     }
   }
@@ -66,6 +95,11 @@ class AuthService {
     required String? initials,
   }) async {
     try {
+      print('\n[AuthService] ===== REGISTER START =====');
+      print('[AuthService] API URL: $registerApiUrl');
+      print('[AuthService] Username: $username');
+      print('[AuthService] Email: $email');
+      
       final response = await http.post(
         Uri.parse(registerApiUrl),
         headers: {"Content-Type": "application/json"},
@@ -78,16 +112,23 @@ class AuthService {
         }),
       ).timeout(timeoutDuration);
 
+      print('[AuthService] Response Status: ${response.statusCode}');
+      print('[AuthService] Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         bool status = data['status'] ?? false;
         
         if (status) {
+          print('[AuthService] Register SUCCESS ✓');
+          print('[AuthService] ===== REGISTER END =====\n');
           return {
             "success": true,
             "message": data['message'] ?? "Đăng ký thành công!"
           };
         } else {
+          print('[AuthService] Register FAILED: ${data['message']}');
+          print('[AuthService] ===== REGISTER END =====\n');
           return {
             "success": false,
             "message": data['message'] ?? "Đăng ký thất bại"
@@ -108,12 +149,16 @@ class AuthService {
           errorMessage = "Đăng ký thất bại: ${response.body}";
         }
         
+        print('[AuthService] Register ERROR: $errorMessage');
+        print('[AuthService] ===== REGISTER END =====\n');
         return {
           "success": false,
           "message": errorMessage
         };
       }
     } catch (e) {
+      print('[AuthService] Register EXCEPTION: $e');
+      print('[AuthService] ===== REGISTER END =====\n');
       return {"success": false, "message": "Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet của bạn."};
     }
   }
@@ -126,6 +171,70 @@ class AuthService {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  // Lấy token đã lưu từ SharedPreferences
+  Future<String?> getStoredToken() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs.getString('jwt_token');
+    } catch (e) {
+      print('[AuthService] Error getting stored token: $e');
+      return null;
+    }
+  }
+
+  // Kiểm tra token có hợp lệ không (còn hạn sử dụng)
+  bool isTokenValid(String token) {
+    try {
+      // Kiểm tra token có bị hết hạn không
+      bool isExpired = JwtDecoder.isExpired(token);
+      return !isExpired;
+    } catch (e) {
+      print('[AuthService] Error checking token validity: $e');
+      return false;
+    }
+  }
+
+  // Tự động đăng nhập với token đã lưu
+  Future<Map<String, dynamic>> autoLogin() async {
+    try {
+      print('\n[AuthService] ===== AUTO LOGIN START =====');
+      
+      // Lấy token đã lưu
+      String? token = await getStoredToken();
+      
+      if (token == null) {
+        print('[AuthService] No stored token found');
+        print('[AuthService] ===== AUTO LOGIN END =====\n');
+        return {"success": false, "message": "Không tìm thấy token"};
+      }
+
+      // Kiểm tra token có còn hạn không
+      if (!isTokenValid(token)) {
+        print('[AuthService] Token expired');
+        // Xóa token hết hạn
+        await logout();
+        print('[AuthService] ===== AUTO LOGIN END =====\n');
+        return {"success": false, "message": "Token đã hết hạn"};
+      }
+
+      // Token hợp lệ, decode để lấy thông tin
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      
+      print('[AuthService] Auto login SUCCESS ✓');
+      print('[AuthService] ===== AUTO LOGIN END =====\n');
+      
+      return {
+        "success": true,
+        "token": token,
+        "decodedToken": decodedToken,
+      };
+    } catch (e) {
+      print('[AuthService] Auto login ERROR: $e');
+      print('[AuthService] ===== AUTO LOGIN END =====\n');
+      return {"success": false, "message": "Lỗi tự động đăng nhập: $e"};
     }
   }
 }

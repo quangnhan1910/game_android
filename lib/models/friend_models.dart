@@ -57,6 +57,29 @@ class FriendRequest {
   }
 }
 
+class SentFriendRequest {
+  final int id;
+  final String receiverUsername;
+  final String? receiverInitials;
+  final DateTime createdAt;
+
+  SentFriendRequest({
+    required this.id,
+    required this.receiverUsername,
+    this.receiverInitials,
+    required this.createdAt,
+  });
+
+  factory SentFriendRequest.fromJson(Map<String, dynamic> json) {
+    return SentFriendRequest(
+      id: json['id'] ?? 0,
+      receiverUsername: json['receiverUsername'] ?? '',
+      receiverInitials: json['receiverInitials'],
+      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+    );
+  }
+}
+
 class Friend {
   final String username;
   final String? initials;

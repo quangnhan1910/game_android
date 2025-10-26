@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/splash_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/registration_screen.dart';
 import 'screens/main_navigation_screen.dart';
@@ -7,6 +8,7 @@ import 'screens/rubik/pick_colors_screen.dart';
 import 'screens/rubik/solve_screen.dart';
 import 'screens/xep_hinh/tetris_screen.dart';
 import 'screens/caro/caro_screen.dart';
+import 'screens/messages/conversations_list_screen.dart';
 import 'providers/sudoku/difficulty_sudoku.dart';
 
 class AppRoutes {
@@ -20,9 +22,10 @@ class AppRoutes {
   static const tetris = '/tetris';
   static const caro = '/caro';
   static const sudoku = '/sudoku';
+  static const messages = '/messages';
 
   static Map<String, WidgetBuilder> routes = {
-    home: (context) => const LoginScreen(),
+    home: (context) => const SplashScreen(),
     login: (context) => const LoginScreen(),
     register: (context) => const RegisterScreen(),
     mainMenu: (context) => const MainNavigationScreen(),
@@ -32,5 +35,6 @@ class AppRoutes {
     tetris: (context) => const TetrisScreen(),
     caro: (context) => const ManHinhGameCaro(),
     sudoku: (context) => const DifficultySudoku(),
+    messages: (context) => const ConversationsListScreen(),
   };
 }

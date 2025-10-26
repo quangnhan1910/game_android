@@ -9,10 +9,6 @@ class rubikHomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rubik 3×3 Assistant'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pushNamed(context, AppRoutes.mainMenu),
-        ),
       ),
       body: Center(
         child: Column(

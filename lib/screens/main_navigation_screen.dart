@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'main_menu_screen.dart';
 import 'friends/friends_screen.dart';
+import 'messages/conversations_list_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -15,6 +16,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = [
     const MainMenuScreen(),
     const FriendsScreen(),
+    const ConversationsListScreen(),
   ];
 
   @override
@@ -41,6 +43,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
             label: 'Bạn bè',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Tin nhắn',
           ),
         ],
       ),
