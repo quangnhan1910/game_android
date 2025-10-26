@@ -14,6 +14,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _initialsController = TextEditingController();
@@ -27,6 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void dispose() {
     _usernameController.dispose();
     _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _initialsController.dispose();
@@ -85,6 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final result = await _authService.register(
         username: _usernameController.text.trim(),
         email: _emailController.text.trim(),
+        phoneNumber: _phoneController.text.trim(),
         password: _passwordController.text,
         initials: _initialsController.text.trim(),
       );
@@ -206,7 +209,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 _buildInputField(
                   controller: _emailController,
-                  label: 'Email', // Bỏ hint
+                  label: 'Email',
                   icon: Icons.email_outlined,
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
@@ -220,7 +223,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
 
-                // --- THAY ĐỔI 3: Điều chỉnh khoảng cách ---
+                const SizedBox(height: 16),
+
+                _buildInputField(
+                  controller: _phoneController,
+                  label: 'Số điện thoại',
+                  icon: Icons.phone_outlined,
+                  keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Vui lòng nhập số điện thoại';
+                    }
+                    // Validate phone number format (Vietnamese phone numbers)
+                    if (!RegExp(r'^(0|\+84)[0-9]{9,10}$').hasMatch(value.replaceAll(' ', ''))) {
+                      return 'Số điện thoại không hợp lệ';
+                    }
+                    return null;
+                  },
+                ),
+
                 const SizedBox(height: 16),
 
                 _buildInputField(

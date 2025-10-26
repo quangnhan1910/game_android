@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/registration_screen.dart';
-import 'screens/main_menu_screen.dart';
+import 'screens/main_navigation_screen.dart';
 import 'screens/rubik/rubik_home_screen.dart';
 import 'screens/rubik/pick_colors_screen.dart';
 import 'screens/rubik/solve_screen.dart';
@@ -25,7 +25,7 @@ class AppRoutes {
     home: (context) => const LoginScreen(),
     login: (context) => const LoginScreen(),
     register: (context) => const RegisterScreen(),
-    mainMenu: (context) => const MainMenuScreen(),
+    mainMenu: (context) => const MainNavigationScreen(),
     rubikHome: (context) => const rubikHomeScreen(),
     pick: (context) => const PickColorsScreen(),
     solve: (context) => const SolveScreen(),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../services/auth_service.dart';
-import '../main_menu_screen.dart';
+import '../main_navigation_screen.dart';
 import 'registration_screen.dart';
 
 
@@ -15,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
+  final _emailOrPhoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
 
@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailOrPhoneController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final result = await _authService.login(
-        _usernameController.text.trim(),
+        _emailOrPhoneController.text.trim(),
         _passwordController.text,
       );
 
@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const MainMenuScreen(),
+              builder: (context) => const MainNavigationScreen(),
             ),
           );
         }
@@ -166,18 +166,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Form đăng nhập
                 _buildInputField(
-                  controller: _usernameController,
-                  label: 'Tên đăng nhập', // Đổi 'hint' thành 'label'
+                  controller: _emailOrPhoneController,
+                  label: 'Email hoặc Số điện thoại',
                   icon: Icons.person_outline,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập tên đăng nhập';
+                      return 'Vui lòng nhập email hoặc số điện thoại';
                     }
                     return null;
                   },
                 ),
 
-                // --- THAY ĐỔI 4: Điều chỉnh khoảng cách ---
+              
                 const SizedBox(height: 16),
 
                 _buildInputField(

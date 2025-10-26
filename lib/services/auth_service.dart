@@ -12,18 +12,21 @@ class AuthService {
   
   // đường dẫn tới API register
   String get registerApiUrl => "${Config_URL.baseUrl}Authenticate/register";
+  
+  // Timeout cho các request
+  static const Duration timeoutDuration = Duration(seconds: 15);
 
-  Future<Map<String, dynamic>> login(String username, String password) async {
+  Future<Map<String, dynamic>> login(String emailOrPhone, String password) async {
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {"Content-Type": "application/json"},
-        //Lấy thông tin tên đăng nhập và password
+        //Lấy thông tin email/số điện thoại và password
         body: jsonEncode({
-          "UsernameOrEmail": username,
+          "EmailOrPhone": emailOrPhone,
           "Password": password,
         }),
-      );
+      ).timeout(timeoutDuration);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -58,6 +61,7 @@ class AuthService {
   Future<Map<String, dynamic>> register({
     required String username,
     required String email,
+    required String phoneNumber,
     required String password,
     required String? initials,
   }) async {
@@ -68,10 +72,11 @@ class AuthService {
         body: jsonEncode({
           "Username": username,
           "Email": email,
+          "PhoneNumber": phoneNumber,
           "Password": password,
           "Initials": initials,
         }),
-      );
+      ).timeout(timeoutDuration);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
