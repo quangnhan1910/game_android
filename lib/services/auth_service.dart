@@ -99,17 +99,22 @@ class AuthService {
       print('[AuthService] API URL: $registerApiUrl');
       print('[AuthService] Username: $username');
       print('[AuthService] Email: $email');
+      print('[AuthService] PhoneNumber: $phoneNumber');
+      print('[AuthService] Initials: $initials');
+      
+      final requestBody = {
+        "Username": username,
+        "Email": email,
+        "PhoneNumber": phoneNumber,
+        "Password": password,
+        "Initials": initials,
+      };
+      print('[AuthService] Request Body: ${jsonEncode(requestBody)}');
       
       final response = await http.post(
         Uri.parse(registerApiUrl),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "Username": username,
-          "Email": email,
-          "PhoneNumber": phoneNumber,
-          "Password": password,
-          "Initials": initials,
-        }),
+        body: jsonEncode(requestBody),
       ).timeout(timeoutDuration);
 
       print('[AuthService] Response Status: ${response.statusCode}');
@@ -235,6 +240,26 @@ class AuthService {
       print('[AuthService] Auto login ERROR: $e');
       print('[AuthService] ===== AUTO LOGIN END =====\n');
       return {"success": false, "message": "Lỗi tự động đăng nhập: $e"};
+    }
+  }
+
+  // Lấy username từ token
+  Future<String?> getUsername() async {
+    try {
+      String? token = await getStoredToken();
+      if (token == null) return null;
+      
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      
+      // Thử các key có thể có trong token
+      return decodedToken['unique_name'] ?? 
+             decodedToken['username'] ?? 
+             decodedToken['name'] ?? 
+             decodedToken['sub'] ?? 
+             'Unknown';
+    } catch (e) {
+      print('[AuthService] Error getting username: $e');
+      return null;
     }
   }
 }
