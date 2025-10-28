@@ -1017,96 +1017,37 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
         child: SafeArea(
           child: Column(
             children: [
-              // Header với title đẹp + nút Back góc trái trên cùng
-              Stack(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '🎯 CARO vs AI 🎯',
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(2, 2),
-                                    blurRadius: 4,
-                                    color: Colors.black26,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            // Đồng hồ đếm ngược nhỏ ở header
-                            if (_daBatDau &&
-                                !_daKetThuc &&
-                                _thoiGianConLai > 0 &&
-                                _luotNguoi)
-                              ValueListenableBuilder<int>(
-                                valueListenable: _thoiGianNotifier,
-                                builder: (context, thoiGian, _) {
-                                  return Container(
-                                    margin: const EdgeInsets.only(left: 12),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: thoiGian <= 5
-                                          ? Colors.red
-                                          : thoiGian <= 10
-                                          ? Colors.orange
-                                          : Colors.green,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black26,
-                                          blurRadius: 4,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Text(
-                                      '⏱️ ${thoiGian}s',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Trí tuệ nhân tạo siêu mạnh',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white70,
-                            fontStyle: FontStyle.italic,
+              // Header với title đẹp
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Text(
+                      '🎯 CARO vs AI 🎯',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(2, 2),
+                            blurRadius: 4,
+                            color: Colors.black26,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.arrow_back),
-                      color: Colors.black,
-                      tooltip: 'Quay lại',
+                    const SizedBox(height: 8),
+                    Text(
+                      'Trí tuệ nhân tạo siêu mạnh',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
 
               // Panel điều khiển đẹp
@@ -1205,17 +1146,6 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
                           _buildSmallTimerBadge(),
                         ],
                       ],
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    // Nút hướng dẫn chơi
-                    Center(
-                      child: _buildButton(
-                        '❓ Hướng dẫn chơi',
-                        Colors.blue,
-                        _hienThiHuongDan,
-                      ),
                     ),
                   ],
                 ),
