@@ -6,6 +6,7 @@ import 'screens/main_navigation_screen.dart';
 import 'screens/rubik/rubik_home_screen.dart';
 import 'screens/rubik/pick_colors_screen.dart';
 import 'screens/rubik/solve_screen.dart';
+import 'screens/rubik/scan_faces_screen.dart';
 import 'screens/xep_hinh/tetris_screen.dart';
 import 'screens/xep_hinh/tetris_leaderboard_screen.dart';
 import 'screens/caro/caro_screen.dart';
@@ -19,6 +20,7 @@ class AppRoutes {
   static const register = '/register';
   static const mainMenu = '/main-menu';
   static const rubikHome = '/rubik-home';
+  static const scanFaces = '/scan-faces';
   static const pick = '/pick';
   static const solve = '/solve';
   static const tetris = '/tetris';
@@ -33,7 +35,8 @@ class AppRoutes {
     login: (context) => const LoginScreen(),
     register: (context) => const RegisterScreen(),
     mainMenu: (context) => const MainNavigationScreen(),
-    rubikHome: (context) => const rubikHomeScreen(),
+    rubikHome: (context) => const HomeScreen(),
+    scanFaces: (context) => const ScanFacesScreen(),
     pick: (context) => const PickColorsScreen(),
     solve: (context) => const SolveScreen(),
     tetris: (context) => const TetrisScreen(),
