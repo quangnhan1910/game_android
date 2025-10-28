@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import '../models/rubik/cube_models.dart';
 
 final cubeProvider = StateNotifierProvider<CubeNotifier, CubeState>((ref) {
@@ -29,4 +30,12 @@ class CubeNotifier extends StateNotifier<CubeState> {
   }
 
   void resetSolved() => state = CubeState();
+
+  /// Gán cả 54 stickers cùng lúc
+  void setStickers(List<String> stickers) {
+    if (stickers.length != 54) return;
+    final validStickers = stickers.where((s) => validColors.contains(s)).toList();
+    if (validStickers.length != 54) return;
+    state = CubeState(stickers: validStickers);
+  }
 }
