@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/sudoku_leaderboard_models.dart';
+import '../models/sudoku/sudoku_leaderboard_models.dart';
 import '../config/config_url.dart';
 import 'auth_service.dart';
 

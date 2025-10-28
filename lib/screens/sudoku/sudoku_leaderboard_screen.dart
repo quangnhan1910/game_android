@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/sudoku_leaderboard_models.dart';
+import '../../models/sudoku/sudoku_leaderboard_models.dart';
 import '../../services/sudoku_leaderboard_service.dart';
 import '../../routes.dart';
 
