@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/sudoku_board.dart';
+import '../../models/sudoku/sudoku_board.dart';
 
 class SudokuGrid extends StatelessWidget {
   final SudokuBoard board;

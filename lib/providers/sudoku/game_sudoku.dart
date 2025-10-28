@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../../models/sudoku_board.dart';
+import '../../models/sudoku/sudoku_board.dart';
 import '../../screens/sudoku/sudoku_grid.dart';
 import '../../screens/sudoku/number_pad.dart';
 import '../../screens/sudoku/action_buttons.dart';
