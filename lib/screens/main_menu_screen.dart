@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../routes.dart';
 import '../utils/auth.dart';
+import '../services/auth_service.dart';
 import 'auth/login_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
@@ -45,7 +46,7 @@ class MainMenuScreen extends StatelessWidget {
     if (confirm == true) {
       // Thực hiện logout
       bool success = await Auth.logout();
-      
+
       if (success && context.mounted) {
         // Chuyển về màn hình login và xóa toàn bộ lịch sử navigation
         Navigator.of(context).pushAndRemoveUntil(
@@ -101,6 +102,31 @@ class MainMenuScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
+              FutureBuilder<String?>(
+                future: AuthService().getUsername(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox.shrink();
+                  }
+                  final username = snapshot.data;
+                  if (username == null || username.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Xin chào ' + username,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 12),
               const SizedBox(height: 20),
               const Text(
                 'Chọn Game',
@@ -126,7 +152,7 @@ class MainMenuScreen extends StatelessWidget {
                       icon: Icons.extension,
                       title: 'Rubik 3×3',
                       subtitle: 'Giải khối Rubik',
-                      colors: [Colors.orange.shade300, Colors.red.shade300],
+                      colors: [Colors.green, Colors.green],
                       route: AppRoutes.rubikHome,
                     ),
 
@@ -136,7 +162,7 @@ class MainMenuScreen extends StatelessWidget {
                       icon: Icons.grid_4x4,
                       title: 'Tetris',
                       subtitle: 'Xếp hình cổ điển',
-                      colors: [Colors.green.shade300, Colors.blue.shade300],
+                      colors: [Colors.red, Colors.red],
                       route: AppRoutes.tetris,
                     ),
 
@@ -146,7 +172,7 @@ class MainMenuScreen extends StatelessWidget {
                       icon: Icons.grid_3x3,
                       title: 'Sudoku',
                       subtitle: 'Trò chơi số học',
-                      colors: [Colors.indigo.shade300, Colors.teal.shade300],
+                      colors: [Colors.blue, Colors.blue],
                       route: AppRoutes.sudoku,
                     ),
 
@@ -154,9 +180,9 @@ class MainMenuScreen extends StatelessWidget {
                     _buildGameCard(
                       context,
                       icon: Icons.grid_on,
-                      title: 'Caro vs AI',
+                      title: 'Caro',
                       subtitle: 'Trí tuệ nhân tạo',
-                      colors: [Colors.purple.shade300, Colors.pink.shade300],
+                      colors: [Colors.pink, Colors.pinkAccent],
                       route: AppRoutes.caro,
                     ),
                   ],

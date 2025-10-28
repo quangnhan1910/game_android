@@ -11,7 +11,8 @@ class ManHinhGameCaro extends StatefulWidget {
 }
 
 class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
-  static const int _kichThuoc = 15; // kich thuoc ban co 15x15 (kich thuoc chuan)
+  static const int _kichThuoc =
+      15; // kich thuoc ban co 15x15 (kich thuoc chuan)
   static const int _soQuanDeThang = 5; // 5 quan lien tiep se thang
 
   // 0 = rong, 1 = nguoi, 2 = may
@@ -47,7 +48,7 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     _timer?.cancel();
     _banCo = List.generate(
       _kichThuoc,
-          (_) => List.generate(_kichThuoc, (_) => 0),
+      (_) => List.generate(_kichThuoc, (_) => 0),
     );
     _daKetThuc = false;
     _thongBao = '';
@@ -111,19 +112,14 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
             Icon(Icons.help_outline, color: Colors.blue.shade700, size: 28),
             const SizedBox(width: 8),
             const Text(
               'Hướng dẫn chơi',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -132,43 +128,31 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildHuongDanSection(
-                '🎯 Luật chơi cơ bản',
-                [
-                  'Bạn (X) chơi với Máy (O)',
-                  'Người chơi đi trước',
-                  'Đặt 5 quân liên tiếp (ngang/dọc/chéo) để thắng',
-                  'Nếu hết ô mà không ai thắng → Hòa',
-                ],
-              ),
+              _buildHuongDanSection('🎯 Luật chơi cơ bản', [
+                'Bạn (X) chơi với Máy (O)',
+                'Người chơi đi trước',
+                'Đặt 5 quân liên tiếp (ngang/dọc/chéo) để thắng',
+                'Nếu hết ô mà không ai thắng → Hòa',
+              ]),
               const SizedBox(height: 16),
-              _buildHuongDanSection(
-                '😊 Chế độ Dễ',
-                [
-                  'Máy đi ngẫu nhiên',
-                  'Không giới hạn thời gian',
-                  'Phù hợp để làm quen',
-                ],
-              ),
+              _buildHuongDanSection('😊 Chế độ Dễ', [
+                'Máy đi ngẫu nhiên',
+                'Không giới hạn thời gian',
+                'Phù hợp để làm quen',
+              ]),
               const SizedBox(height: 16),
-              _buildHuongDanSection(
-                '😐 Chế độ Trung bình',
-                [
-                  'Máy sử dụng AI thông minh',
-                  'Giới hạn thời gian: 30 giây/lượt',
-                  'Hết giờ → Bạn thua',
-                ],
-              ),
+              _buildHuongDanSection('😐 Chế độ Trung bình', [
+                'Máy sử dụng AI thông minh',
+                'Giới hạn thời gian: 30 giây/lượt',
+                'Hết giờ → Bạn thua',
+              ]),
               const SizedBox(height: 16),
-              _buildHuongDanSection(
-                '😈 Chế độ Khó',
-                [
-                  'Máy sử dụng AI siêu mạnh',
-                  'Giới hạn thời gian: 15 giây/lượt',
-                  'Hết giờ → Bạn thua',
-                  'Thử thách cao nhất!',
-                ],
-              ),
+              _buildHuongDanSection('😈 Chế độ Khó', [
+                'Máy sử dụng AI siêu mạnh',
+                'Giới hạn thời gian: 15 giây/lượt',
+                'Hết giờ → Bạn thua',
+                'Thử thách cao nhất!',
+              ]),
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
@@ -179,7 +163,11 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.lightbulb_outline, color: Colors.blue.shade700, size: 20),
+                    Icon(
+                      Icons.lightbulb_outline,
+                      color: Colors.blue.shade700,
+                      size: 20,
+                    ),
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
@@ -209,10 +197,7 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
             ),
             child: const Text(
               'Đã hiểu',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -234,21 +219,26 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
           ),
         ),
         const SizedBox(height: 8),
-        ...items.map((item) => Padding(
-          padding: const EdgeInsets.only(left: 8, bottom: 4),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('• ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-              Expanded(
-                child: Text(
-                  item,
-                  style: const TextStyle(fontSize: 14, height: 1.4),
+        ...items.map(
+          (item) => Padding(
+            padding: const EdgeInsets.only(left: 8, bottom: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '• ',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Text(
+                    item,
+                    style: const TextStyle(fontSize: 14, height: 1.4),
+                  ),
+                ),
+              ],
+            ),
           ),
-        )),
+        ),
       ],
     );
   }
@@ -306,7 +296,11 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
   int _demHuong(int r, int c, int dr, int dc, int nguoi) {
     int dem = 0;
     int i = r + dr, j = c + dc;
-    while (i >= 0 && i < _kichThuoc && j >= 0 && j < _kichThuoc && _banCo[i][j] == nguoi) {
+    while (i >= 0 &&
+        i < _kichThuoc &&
+        j >= 0 &&
+        j < _kichThuoc &&
+        _banCo[i][j] == nguoi) {
       dem++;
       i += dr;
       j += dc;
@@ -347,7 +341,7 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
           'doKho': _doKho,
           'kichThuoc': _kichThuoc,
         });
-        
+
         if (diem != null && !_daKetThuc) {
           datNuocDi(diem.item1, diem.item2, 2);
           _luotNguoi = true;
@@ -422,7 +416,11 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     final int tam = _kichThuoc ~/ 2;
     for (int r = tam - 6; r <= tam + 6; r++) {
       for (int c = tam - 6; c <= tam + 6; c++) {
-        if (r >= 0 && c >= 0 && r < _kichThuoc && c < _kichThuoc && _banCo[r][c] == 0) {
+        if (r >= 0 &&
+            c >= 0 &&
+            r < _kichThuoc &&
+            c < _kichThuoc &&
+            _banCo[r][c] == 0) {
           trong.add(_Cap(r, c));
         }
       }
@@ -470,7 +468,8 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
 
       final khoangCachTam = (o.item1 - tam).abs() + (o.item2 - tam).abs();
       final thuongTam = (_kichThuoc - khoangCachTam);
-      final tong = diemMay * 2 - diemNguoi + thuongTam; // tăng trọng số từ 1.5 lên 2
+      final tong =
+          diemMay * 2 - diemNguoi + thuongTam; // tăng trọng số từ 1.5 lên 2
 
       if (tong > diemTotNhat) {
         diemTotNhat = tong;
@@ -512,8 +511,12 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     // 5) Minimax nông với heuristic mạnh
     final dsSorted = [...ds];
     dsSorted.sort((a, b) {
-      final db = danhGiaOTaiViTri(b.item1, b.item2, 2) * 4 - danhGiaOTaiViTri(b.item1, b.item2, 1) * 3;
-      final da = danhGiaOTaiViTri(a.item1, a.item2, 2) * 4 - danhGiaOTaiViTri(a.item1, a.item2, 1) * 3;
+      final db =
+          danhGiaOTaiViTri(b.item1, b.item2, 2) * 4 -
+          danhGiaOTaiViTri(b.item1, b.item2, 1) * 3;
+      final da =
+          danhGiaOTaiViTri(a.item1, a.item2, 2) * 4 -
+          danhGiaOTaiViTri(a.item1, a.item2, 1) * 3;
       return db.compareTo(da);
     });
 
@@ -530,7 +533,14 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
       _banCo[o.item1][o.item2] = 2;
       // Minimax nông: depth 2-3
       final depth = top.length <= 4 ? 3 : 2;
-      final diem = minimaxIterativeDeepening(2, 0, alpha, beta, top.length, depth);
+      final diem = minimaxIterativeDeepening(
+        2,
+        0,
+        alpha,
+        beta,
+        top.length,
+        depth,
+      );
       _banCo[o.item1][o.item2] = 0;
       if (diem > diemTotNhat) {
         diemTotNhat = diem;
@@ -550,7 +560,8 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
 
         final khoangCachTam = (o.item1 - tam).abs() + (o.item2 - tam).abs();
         final thuongTam = (_kichThuoc - khoangCachTam);
-        final tong = diemMay * 4 - diemNguoi * 3 + thuongTam; // TĂNG CƯỜNG: 4 vs 3
+        final tong =
+            diemMay * 4 - diemNguoi * 3 + thuongTam; // TĂNG CƯỜNG: 4 vs 3
 
         if (tong > diemTotNhat2) {
           diemTotNhat2 = tong;
@@ -559,13 +570,20 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
       }
       return nuocTotNhat2 ?? dsSorted.first;
     }
-    
+
     return nuocTotNhat;
   }
 
   // minimaxIterativeDeepening: iterative deepening nhu KSH-AI với depth tối đa
   // Giai tich: Bat dau tu depth 2, tang dan len maxDepth. Dung alpha-beta pruning va transposition table simulation.
-  int minimaxIterativeDeepening(int nguoiDangXet, int doSau, int alpha, int beta, int soUngVien, int maxDepth) {
+  int minimaxIterativeDeepening(
+    int nguoiDangXet,
+    int doSau,
+    int alpha,
+    int beta,
+    int soUngVien,
+    int maxDepth,
+  ) {
     int bestScore = nguoiDangXet == 2 ? -0x3f3f3f3f : 0x3f3f3f3f;
 
     // iterative deepening: bat dau tu depth 2, tang dan len maxDepth
@@ -584,13 +602,15 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     return bestScore;
   }
 
-
-
-
-
   // minimaxGioiHan: danh gia nut theo minimax voi alpha-beta
   // Giai tich: Neu den do sau hoac ket thuc tran, tra ve diem heuristic. Nguoi (1) la minimize, May (2) la maximize.
-  int minimaxGioiHan(int nguoiDangXet, int doSau, int doSauToiDa, int alpha, int beta) {
+  int minimaxGioiHan(
+    int nguoiDangXet,
+    int doSau,
+    int doSauToiDa,
+    int alpha,
+    int beta,
+  ) {
     if (_daKetThuc) {
       // neu co ket thuc: uu tien thang nhanh hoac thua cham
       return _thongBao == 'Máy Thắng!'
@@ -689,15 +709,29 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
   int _diemChuoiNangCao(int r, int c, int dr, int dc, int nguoi) {
     int dai = 0;
     int i = r, j = c;
-    while (i >= 0 && i < _kichThuoc && j >= 0 && j < _kichThuoc && _banCo[i][j] == nguoi) {
+    while (i >= 0 &&
+        i < _kichThuoc &&
+        j >= 0 &&
+        j < _kichThuoc &&
+        _banCo[i][j] == nguoi) {
       dai++;
       i += dr;
       j += dc;
     }
     final int r1 = r - dr, c1 = c - dc;
     final int r2 = i, c2 = j;
-    bool chanDau = !(r1 >= 0 && r1 < _kichThuoc && c1 >= 0 && c1 < _kichThuoc && _banCo[r1][c1] == 0);
-    bool chanCuoi = !(r2 >= 0 && r2 < _kichThuoc && c2 >= 0 && c2 < _kichThuoc && _banCo[r2][c2] == 0);
+    bool chanDau =
+        !(r1 >= 0 &&
+            r1 < _kichThuoc &&
+            c1 >= 0 &&
+            c1 < _kichThuoc &&
+            _banCo[r1][c1] == 0);
+    bool chanCuoi =
+        !(r2 >= 0 &&
+            r2 < _kichThuoc &&
+            c2 >= 0 &&
+            c2 < _kichThuoc &&
+            _banCo[r2][c2] == 0);
 
     if (dai >= _soQuanDeThang) return 200000;
     if (chanDau && chanCuoi) return 0;
@@ -721,14 +755,24 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     final sumcol = _scoreOfColOne(nguoi, r, c);
     final a = _winningSituation(sumcol);
     res += a * M;
-    res += (sumcol[-1] ?? 0) + (sumcol[1] ?? 0) + 4 * (sumcol[2] ?? 0) + 8 * (sumcol[3] ?? 0) + 16 * (sumcol[4] ?? 0);
+    res +=
+        (sumcol[-1] ?? 0) +
+        (sumcol[1] ?? 0) +
+        4 * (sumcol[2] ?? 0) +
+        8 * (sumcol[3] ?? 0) +
+        16 * (sumcol[4] ?? 0);
 
     // phong thu: dat quan cua doi thu
     _banCo[r][c] = anticol;
     final sumanticol = _scoreOfColOne(anticol, r, c);
     final d = _winningSituation(sumanticol);
     res += d * (M - 100);
-    res += (sumanticol[-1] ?? 0) + (sumanticol[1] ?? 0) + 4 * (sumanticol[2] ?? 0) + 8 * (sumanticol[3] ?? 0) + 16 * (sumanticol[4] ?? 0);
+    res +=
+        (sumanticol[-1] ?? 0) +
+        (sumanticol[1] ?? 0) +
+        4 * (sumanticol[2] ?? 0) +
+        8 * (sumanticol[3] ?? 0) +
+        16 * (sumanticol[4] ?? 0);
 
     _banCo[r][c] = 0;
     return res;
@@ -748,10 +792,10 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     };
 
     const List<List<int>> huong = [
-      [0, 1],   // ngang
-      [1, 0],   // doc
-      [1, 1],   // cheo chinh
-      [-1, 1],  // cheo phu
+      [0, 1], // ngang
+      [1, 0], // doc
+      [1, 1], // cheo chinh
+      [-1, 1], // cheo phu
     ];
 
     for (final h in huong) {
@@ -836,7 +880,8 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     if ((sumcol[5] ?? 0) > 0) return 5; // co 5 quan lien tiep
 
     // co 2 chuoi 4 quan hoac 1 chuoi 4 quan co >=2 pattern
-    if ((sumcol[4] ?? 0) >= 2 || ((sumcol[4] ?? 0) >= 1 && (sumcol[4] ?? 0) >= 2)) {
+    if ((sumcol[4] ?? 0) >= 2 ||
+        ((sumcol[4] ?? 0) >= 1 && (sumcol[4] ?? 0) >= 2)) {
       return 4;
     }
 
@@ -861,7 +906,6 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     return false;
   }
 
-
   // _timNuocChanDoubleThreat: chặn double threat của người chơi
   // Giai tich: Tìm nước đi mà nếu người chơi đi sẽ tạo ra 2 cửa thắng cùng lúc
   _Cap? _timNuocChanDoubleThreat() {
@@ -872,7 +916,8 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
       _banCo[o.item1][o.item2] = 0;
 
       // Kiểm tra có tạo ra double threat không (>=2 chuỗi 4 hoặc >=2 chuỗi 3)
-      if ((sumcol[4] ?? 0) >= 2 || ((sumcol[3] ?? 0) >= 2 && (sumcol[4] ?? 0) >= 1)) {
+      if ((sumcol[4] ?? 0) >= 2 ||
+          ((sumcol[3] ?? 0) >= 2 && (sumcol[4] ?? 0) >= 1)) {
         return o;
       }
     }
@@ -889,7 +934,8 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
       _banCo[o.item1][o.item2] = 0;
 
       // Kiểm tra có tạo ra double threat không
-      if ((sumcol[4] ?? 0) >= 2 || ((sumcol[3] ?? 0) >= 2 && (sumcol[4] ?? 0) >= 1)) {
+      if ((sumcol[4] ?? 0) >= 2 ||
+          ((sumcol[3] ?? 0) >= 2 && (sumcol[4] ?? 0) >= 1)) {
         return o;
       }
     }
@@ -901,15 +947,29 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
   int _diemChuoi(int r, int c, int dr, int dc, int nguoi) {
     int dai = 0;
     int i = r, j = c;
-    while (i >= 0 && i < _kichThuoc && j >= 0 && j < _kichThuoc && _banCo[i][j] == nguoi) {
+    while (i >= 0 &&
+        i < _kichThuoc &&
+        j >= 0 &&
+        j < _kichThuoc &&
+        _banCo[i][j] == nguoi) {
       dai++;
       i += dr;
       j += dc;
     }
     final int r1 = r - dr, c1 = c - dc;
     final int r2 = i, c2 = j;
-    bool chanDau = !(r1 >= 0 && r1 < _kichThuoc && c1 >= 0 && c1 < _kichThuoc && _banCo[r1][c1] == 0);
-    bool chanCuoi = !(r2 >= 0 && r2 < _kichThuoc && c2 >= 0 && c2 < _kichThuoc && _banCo[r2][c2] == 0);
+    bool chanDau =
+        !(r1 >= 0 &&
+            r1 < _kichThuoc &&
+            c1 >= 0 &&
+            c1 < _kichThuoc &&
+            _banCo[r1][c1] == 0);
+    bool chanCuoi =
+        !(r2 >= 0 &&
+            r2 < _kichThuoc &&
+            c2 >= 0 &&
+            c2 < _kichThuoc &&
+            _banCo[r2][c2] == 0);
 
     if (dai >= _soQuanDeThang) return 100000;
     if (chanDau && chanCuoi) return 0;
@@ -935,7 +995,11 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
         for (int dr = -2; dr <= 2; dr++) {
           for (int dc = -2; dc <= 2; dc++) {
             final int rr = r + dr, cc = c + dc;
-            if (rr >= 0 && cc >= 0 && rr < _kichThuoc && cc < _kichThuoc && _banCo[rr][cc] == 0) {
+            if (rr >= 0 &&
+                cc >= 0 &&
+                rr < _kichThuoc &&
+                cc < _kichThuoc &&
+                _banCo[rr][cc] == 0) {
               tap.add('$rr,$cc');
             }
           }
@@ -962,7 +1026,11 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
         for (int dr = -banKinh; dr <= banKinh; dr++) {
           for (int dc = -banKinh; dc <= banKinh; dc++) {
             final int rr = r + dr, cc = c + dc;
-            if (rr >= 0 && cc >= 0 && rr < _kichThuoc && cc < _kichThuoc && _banCo[rr][cc] == 0) {
+            if (rr >= 0 &&
+                cc >= 0 &&
+                rr < _kichThuoc &&
+                cc < _kichThuoc &&
+                _banCo[rr][cc] == 0) {
               tap.add('$rr,$cc');
             }
           }
@@ -979,7 +1047,6 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     return ds;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -988,86 +1055,102 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-              Color(0xFFf093fb),
-            ],
+            colors: [Color(0xFF667eea), Color(0xFF764ba2), Color(0xFFf093fb)],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
-              // Header với title đẹp
-              Container(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+              // Header với title đẹp + nút Back góc trái trên cùng
+              Stack(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
                       children: [
-                        Text(
-                          '🎯 CARO vs AI 🎯',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                offset: Offset(2, 2),
-                                blurRadius: 4,
-                                color: Colors.black26,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '🎯 CARO vs AI 🎯',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                    offset: Offset(2, 2),
+                                    blurRadius: 4,
+                                    color: Colors.black26,
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
+                            // Đồng hồ đếm ngược nhỏ ở header
+                            if (_daBatDau &&
+                                !_daKetThuc &&
+                                _thoiGianConLai > 0 &&
+                                _luotNguoi)
+                              ValueListenableBuilder<int>(
+                                valueListenable: _thoiGianNotifier,
+                                builder: (context, thoiGian, _) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(left: 12),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 6,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: thoiGian <= 5
+                                          ? Colors.red
+                                          : thoiGian <= 10
+                                          ? Colors.orange
+                                          : Colors.green,
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Text(
+                                      '⏱️ ${thoiGian}s',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Trí tuệ nhân tạo siêu mạnh',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white70,
+                            fontStyle: FontStyle.italic,
                           ),
                         ),
-                        // Đồng hồ đếm ngược nhỏ ở header
-                        if (_daBatDau && !_daKetThuc && _thoiGianConLai > 0 && _luotNguoi)
-                          ValueListenableBuilder<int>(
-                            valueListenable: _thoiGianNotifier,
-                            builder: (context, thoiGian, _) {
-                              return Container(
-                                margin: const EdgeInsets.only(left: 12),
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: thoiGian <= 5
-                                      ? Colors.red
-                                      : thoiGian <= 10
-                                      ? Colors.orange
-                                      : Colors.green,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black26,
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  '⏱️ ${thoiGian}s',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Trí tuệ nhân tạo siêu mạnh',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white70,
-                        fontStyle: FontStyle.italic,
-                      ),
+                  ),
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.arrow_back),
+                      color: Colors.black,
+                      tooltip: 'Quay lại',
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
 
               // Panel điều khiển đẹp
@@ -1092,7 +1175,10 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
                       children: [
                         // Dropdown độ khó đẹp
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.blue.shade50,
                             borderRadius: BorderRadius.circular(8),
@@ -1101,17 +1187,36 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.settings, size: 16, color: Colors.blue.shade700),
+                              Icon(
+                                Icons.settings,
+                                size: 16,
+                                color: Colors.blue.shade700,
+                              ),
                               const SizedBox(width: 8),
-                              const Text('Độ khó: ', style: TextStyle(fontWeight: FontWeight.w600)),
+                              const Text(
+                                'Độ khó: ',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
                               DropdownButton<String>(
                                 value: _doKho,
                                 underline: const SizedBox(),
-                                style: TextStyle(color: Colors.blue.shade700, fontWeight: FontWeight.w600),
+                                style: TextStyle(
+                                  color: Colors.blue.shade700,
+                                  fontWeight: FontWeight.w600,
+                                ),
                                 items: const [
-                                  DropdownMenuItem(value: 'de', child: Text('😊 Dễ')),
-                                  DropdownMenuItem(value: 'trung binh', child: Text('😐 Trung bình')),
-                                  DropdownMenuItem(value: 'kho', child: Text('😈 Khó')),
+                                  DropdownMenuItem(
+                                    value: 'de',
+                                    child: Text('😊 Dễ'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'trung binh',
+                                    child: Text('😐 Trung bình'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'kho',
+                                    child: Text('😈 Khó'),
+                                  ),
                                 ],
                                 onChanged: (v) {
                                   if (v == null) return;
@@ -1137,16 +1242,12 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
                           Colors.green,
                           batDauSauKhiChonCheDo,
                         ),
-                        _buildButton(
-                          '🔄 Chơi lại',
-                          Colors.orange,
-                              () {
-                            final dangChoi = _daBatDau;
-                            khoiTaoBanCo();
-                            _daBatDau = dangChoi;
-                            setState(() {});
-                          },
-                        ),
+                        _buildButton('🔄 Chơi lại', Colors.orange, () {
+                          final dangChoi = _daBatDau;
+                          khoiTaoBanCo();
+                          _daBatDau = dangChoi;
+                          setState(() {});
+                        }),
                       ],
                     ),
 
@@ -1168,7 +1269,10 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
               if (_thongBao.isNotEmpty)
                 Container(
                   margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: _thongBao == 'Hòa!'
@@ -1180,9 +1284,13 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: [
                       BoxShadow(
-                        color: (_thongBao == 'Hòa!'
-                            ? Colors.orange
-                            : _thongBao.contains('Thắng') ? Colors.green : Colors.red).withValues(alpha: 0.3),
+                        color:
+                            (_thongBao == 'Hòa!'
+                                    ? Colors.orange
+                                    : _thongBao.contains('Thắng')
+                                    ? Colors.green
+                                    : Colors.red)
+                                .withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -1280,9 +1388,7 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
 
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: gradientColors,
-        ),
+        gradient: LinearGradient(colors: gradientColors),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -1335,9 +1441,7 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
             borderRadius: BorderRadius.circular(8),
             child: Container(
               decoration: BoxDecoration(
-                color: isCenter
-                    ? Colors.amber.shade100
-                    : Colors.grey.shade50,
+                color: isCenter ? Colors.amber.shade100 : Colors.grey.shade50,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: isCenter
@@ -1345,71 +1449,74 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
                       : Colors.grey.shade300,
                   width: 1,
                 ),
-                boxShadow: val != 0 ? [
-                  BoxShadow(
-                    color: (val == 1 ? Colors.red : Colors.blue).withValues(alpha: 0.3),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ] : null,
+                boxShadow: val != 0
+                    ? [
+                        BoxShadow(
+                          color: (val == 1 ? Colors.red : Colors.blue)
+                              .withValues(alpha: 0.3),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
+                    : null,
               ),
               child: Center(
                 child: val == 1
                     ? Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFff6b6b), Color(0xFFee5a52)],
-                    ),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.red.withValues(alpha: 0.4),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'X',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                )
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFff6b6b), Color(0xFFee5a52)],
+                          ),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.red.withValues(alpha: 0.4),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'X',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      )
                     : val == 2
                     ? Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF4ecdc4), Color(0xFF44a08d)],
-                    ),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blue.withValues(alpha: 0.4),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'O',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                )
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF4ecdc4), Color(0xFF44a08d)],
+                          ),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blue.withValues(alpha: 0.4),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'O',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      )
                     : null,
               ),
             ),
@@ -1432,9 +1539,9 @@ _Cap? _timNuocDiMayIsolate(Map<String, dynamic> params) {
   final List<List<int>> board = params['board'];
   final String doKho = params['doKho'];
   final int kichThuoc = params['kichThuoc'];
-  
+
   final helper = _AICalculator(board, kichThuoc);
-  
+
   switch (doKho) {
     case 'de':
       return helper.nuocDiDe();
@@ -1451,9 +1558,9 @@ _Cap? _timNuocDiMayIsolate(Map<String, dynamic> params) {
 class _AICalculator {
   final List<List<int>> _banCo;
   final int _kichThuoc;
-  
+
   _AICalculator(this._banCo, this._kichThuoc);
-  
+
   List<_Cap> _lietKeOViTienMoRong(int banKinh) {
     final Set<String> tap = {};
     for (int r = 0; r < _kichThuoc; r++) {
@@ -1462,7 +1569,11 @@ class _AICalculator {
         for (int dr = -banKinh; dr <= banKinh; dr++) {
           for (int dc = -banKinh; dc <= banKinh; dc++) {
             final int rr = r + dr, cc = c + dc;
-            if (rr >= 0 && cc >= 0 && rr < _kichThuoc && cc < _kichThuoc && _banCo[rr][cc] == 0) {
+            if (rr >= 0 &&
+                cc >= 0 &&
+                rr < _kichThuoc &&
+                cc < _kichThuoc &&
+                _banCo[rr][cc] == 0) {
               tap.add('$rr,$cc');
             }
           }
@@ -1478,7 +1589,7 @@ class _AICalculator {
     }
     return ds;
   }
-  
+
   bool _kiemTraThangThua(int r, int c, int nguoi) {
     const List<List<int>> huong = [
       [0, 1], // ngang
@@ -1494,31 +1605,39 @@ class _AICalculator {
     }
     return false;
   }
-  
+
   int _demHuong(int r, int c, int dr, int dc, int nguoi) {
     int dem = 0;
     int i = r + dr, j = c + dc;
-    while (i >= 0 && i < _kichThuoc && j >= 0 && j < _kichThuoc && _banCo[i][j] == nguoi) {
+    while (i >= 0 &&
+        i < _kichThuoc &&
+        j >= 0 &&
+        j < _kichThuoc &&
+        _banCo[i][j] == nguoi) {
       dem++;
       i += dr;
       j += dc;
     }
     return dem;
   }
-  
+
   _Cap? nuocDiDe() {
     final tam = _kichThuoc ~/ 2;
     final List<_Cap> trong = [];
-    
+
     // Tìm ô trống xung quanh tâm
     for (int r = tam - 6; r <= tam + 6; r++) {
       for (int c = tam - 6; c <= tam + 6; c++) {
-        if (r >= 0 && c >= 0 && r < _kichThuoc && c < _kichThuoc && _banCo[r][c] == 0) {
+        if (r >= 0 &&
+            c >= 0 &&
+            r < _kichThuoc &&
+            c < _kichThuoc &&
+            _banCo[r][c] == 0) {
           trong.add(_Cap(r, c));
         }
       }
     }
-    
+
     if (trong.isEmpty) {
       // Nếu không có ô quanh tâm, tìm ô trống bất kỳ
       for (int r = 0; r < _kichThuoc; r++) {
@@ -1527,13 +1646,13 @@ class _AICalculator {
         }
       }
     }
-    
+
     if (trong.isEmpty) return null;
     // Random một ô trống
     trong.shuffle();
     return trong.first;
   }
-  
+
   _Cap? nuocDiTrungBinh() {
     final ds = _lietKeOViTienMoRong(3);
 
@@ -1559,7 +1678,7 @@ class _AICalculator {
     }
     return _Cap(_kichThuoc ~/ 2, _kichThuoc ~/ 2);
   }
-  
+
   _Cap? nuocDiKho() {
     final ds = _lietKeOViTienMoRong(3);
 
@@ -1582,74 +1701,88 @@ class _AICalculator {
     // 3) Heuristic đơn giản
     int diemTotNhat = -0x3f3f3f3f;
     _Cap? nuocTotNhat;
-    
+
     // Chỉ đánh giá top 8 ô tốt nhất để tránh tính toán quá nhiều
     final dsSorted = [...ds];
     if (dsSorted.length > 8) {
       dsSorted.shuffle();
       dsSorted.removeRange(8, dsSorted.length);
     }
-    
+
     for (final o in dsSorted) {
       _banCo[o.item1][o.item2] = 2;
       int diemMay = _tinhDiemNhanh(o.item1, o.item2, 2);
       _banCo[o.item1][o.item2] = 0;
-      
+
       _banCo[o.item1][o.item2] = 1;
       int diemNguoi = _tinhDiemNhanh(o.item1, o.item2, 1);
       _banCo[o.item1][o.item2] = 0;
-      
+
       int tongDiem = diemMay * 3 - diemNguoi * 2;
-      
+
       if (tongDiem > diemTotNhat) {
         diemTotNhat = tongDiem;
         nuocTotNhat = o;
       }
     }
-    
+
     return nuocTotNhat ?? ds.first;
   }
-  
+
   int _tinhDiemNhanh(int r, int c, int nguoi) {
     int diem = 0;
     const List<List<int>> huong = [
-      [0, 1], [1, 0], [1, 1], [1, -1],
+      [0, 1],
+      [1, 0],
+      [1, 1],
+      [1, -1],
     ];
-    
+
     for (final h in huong) {
       int dai = 1;
-      
+
       // Đếm theo một hướng
       int i = r + h[0], j = c + h[1];
-      while (i >= 0 && i < _kichThuoc && j >= 0 && j < _kichThuoc && _banCo[i][j] == nguoi) {
+      while (i >= 0 &&
+          i < _kichThuoc &&
+          j >= 0 &&
+          j < _kichThuoc &&
+          _banCo[i][j] == nguoi) {
         dai++;
         i += h[0];
         j += h[1];
       }
-      
+
       // Đếm theo hướng ngược lại
       i = r - h[0];
       j = c - h[1];
-      while (i >= 0 && i < _kichThuoc && j >= 0 && j < _kichThuoc && _banCo[i][j] == nguoi) {
+      while (i >= 0 &&
+          i < _kichThuoc &&
+          j >= 0 &&
+          j < _kichThuoc &&
+          _banCo[i][j] == nguoi) {
         dai++;
         i -= h[0];
         j -= h[1];
       }
-      
+
       // Đánh giá điểm dựa trên độ dài
       if (dai >= 5) return 100000;
       if (dai == 4) diem += 1000;
       if (dai == 3) diem += 100;
       if (dai == 2) diem += 10;
     }
-    
+
     return diem;
   }
-  
+
   int _danhGiaDonGian(int nguoi) {
     int diem = 0;
     const List<List<int>> huong = [
-      [0, 1], [1, 0], [1, 1], [1, -1],
+      [0, 1],
+      [1, 0],
+      [1, 1],
+      [1, -1],
     ];
     for (int r = 0; r < _kichThuoc; r++) {
       for (int c = 0; c < _kichThuoc; c++) {
@@ -1661,19 +1794,33 @@ class _AICalculator {
     }
     return diem;
   }
-  
+
   int _diemChuoi(int r, int c, int dr, int dc, int nguoi) {
     int dai = 0;
     int i = r, j = c;
-    while (i >= 0 && i < _kichThuoc && j >= 0 && j < _kichThuoc && _banCo[i][j] == nguoi) {
+    while (i >= 0 &&
+        i < _kichThuoc &&
+        j >= 0 &&
+        j < _kichThuoc &&
+        _banCo[i][j] == nguoi) {
       dai++;
       i += dr;
       j += dc;
     }
     final int r1 = r - dr, c1 = c - dc;
     final int r2 = i, c2 = j;
-    bool chanDau = !(r1 >= 0 && r1 < _kichThuoc && c1 >= 0 && c1 < _kichThuoc && _banCo[r1][c1] == 0);
-    bool chanCuoi = !(r2 >= 0 && r2 < _kichThuoc && c2 >= 0 && c2 < _kichThuoc && _banCo[r2][c2] == 0);
+    bool chanDau =
+        !(r1 >= 0 &&
+            r1 < _kichThuoc &&
+            c1 >= 0 &&
+            c1 < _kichThuoc &&
+            _banCo[r1][c1] == 0);
+    bool chanCuoi =
+        !(r2 >= 0 &&
+            r2 < _kichThuoc &&
+            c2 >= 0 &&
+            c2 < _kichThuoc &&
+            _banCo[r2][c2] == 0);
 
     if (dai >= 5) return 100000;
     if (chanDau && chanCuoi) return 0;
@@ -1689,5 +1836,3 @@ class _AICalculator {
     }
   }
 }
-
-
