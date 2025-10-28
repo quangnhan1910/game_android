@@ -562,6 +562,51 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
 
 
 
+  // Badge thời gian nhỏ đặt cạnh nút hướng dẫn
+  Widget _buildSmallTimerBadge() {
+    final Color bgColor = _thoiGianConLai <= 5
+        ? Colors.red.shade600
+        : _thoiGianConLai <= 10
+            ? Colors.orange.shade600
+            : Colors.blue.shade600;
+
+    final Color shadowColor = _thoiGianConLai <= 5
+        ? Colors.red
+        : _thoiGianConLai <= 10
+            ? Colors.orange
+            : Colors.blue;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: shadowColor.withValues(alpha: 0.25),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.timer, color: Colors.white, size: 14),
+          const SizedBox(width: 6),
+          Text(
+            '$_thoiGianConLai s',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // minimaxGioiHan: danh gia nut theo minimax voi alpha-beta
   // Giai tich: Neu den do sau hoac ket thuc tran, tra ve diem heuristic. Nguoi (1) la minimize, May (2) la maximize.
   int minimaxGioiHan(int nguoiDangXet, int doSau, int doSauToiDa, int alpha, int beta) {
@@ -1087,61 +1132,26 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
 
                     const SizedBox(height: 8),
 
-                    // Nút hướng dẫn chơi
-                    Center(
-                      child: _buildButton(
-                        '❓ Hướng dẫn chơi',
-                        Colors.blue,
-                        _hienThiHuongDan,
-                      ),
+                    // Nút hướng dẫn chơi + badge thời gian nhỏ cạnh bên
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildButton(
+                          '❓ Hướng dẫn chơi',
+                          Colors.blue,
+                          _hienThiHuongDan,
+                        ),
+                        if (_daBatDau && !_daKetThuc && _thoiGianConLai > 0 && _luotNguoi) ...[
+                          const SizedBox(width: 8),
+                          _buildSmallTimerBadge(),
+                        ],
+                      ],
                     ),
                   ],
                 ),
               ),
 
-              // Đồng hồ đếm ngược
-              if (_daBatDau && !_daKetThuc && _thoiGianConLai > 0 && _luotNguoi)
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: _thoiGianConLai <= 5
-                          ? [Colors.red.shade400, Colors.red.shade600]
-                          : _thoiGianConLai <= 10
-                          ? [Colors.orange.shade400, Colors.orange.shade600]
-                          : [Colors.blue.shade400, Colors.blue.shade600],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: (_thoiGianConLai <= 5
-                            ? Colors.red
-                            : _thoiGianConLai <= 10
-                            ? Colors.orange
-                            : Colors.blue).withValues(alpha: 0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.timer, color: Colors.white, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Thời gian: $_thoiGianConLai giây',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              // (Đã dời đồng hồ đếm ngược lên góc trên của bàn cờ)
 
               // Thông báo kết quả đẹp
               if (_thongBao.isNotEmpty)
@@ -1197,6 +1207,7 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
                     child: Stack(
                       children: [
                         _xayDungBanCoWidget(),
+                        // Timer badge đã dời lên cạnh nút hướng dẫn
                         if (!_daBatDau)
                           Container(
                             decoration: BoxDecoration(
