@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 // Man hinh chinh cua tro choi Caro voi may (AI)
 class ManHinhGameCaro extends StatefulWidget {
@@ -24,6 +25,7 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
   // Timer cho giới hạn thời gian
   Timer? _timer;
   int _thoiGianConLai = 0; // thời gian còn lại (giây)
+  final ValueNotifier<int> _thoiGianNotifier = ValueNotifier<int>(0);
 
   @override
   void initState() {
@@ -34,6 +36,7 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
   @override
   void dispose() {
     _timer?.cancel();
+    _thoiGianNotifier.dispose();
     super.dispose();
   }
 
@@ -50,6 +53,7 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     _thongBao = '';
     _luotNguoi = true;
     _thoiGianConLai = 0;
+    _thoiGianNotifier.value = 0;
     setState(() {});
   }
 
@@ -71,18 +75,20 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
 
     if (_doKho == 'trung binh') {
       _thoiGianConLai = 30;
+      _thoiGianNotifier.value = 30;
     } else if (_doKho == 'kho') {
       _thoiGianConLai = 15;
+      _thoiGianNotifier.value = 15;
     } else {
       _thoiGianConLai = 0;
+      _thoiGianNotifier.value = 0;
       return; // Chế độ dễ không có giới hạn thời gian
     }
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_thoiGianConLai > 0) {
-        setState(() {
-          _thoiGianConLai--;
-        });
+        _thoiGianConLai--;
+        _thoiGianNotifier.value = _thoiGianConLai;
       } else {
         // Hết thời gian - người chơi thua
         timer.cancel();
@@ -332,15 +338,35 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
     if (!_daBatDau || _daKetThuc) return;
 
     // Chạy AI trong isolate để tránh block main thread
-    Future.delayed(const Duration(milliseconds: 100), () async {
-      final diem = await _timNuocDiMayAsync(_doKho);
-      if (diem != null && !_daKetThuc) {
-        datNuocDi(diem.item1, diem.item2, 2);
-        _luotNguoi = true;
-        setState(() {});
-        // Bắt đầu timer cho lượt người chơi tiếp theo
-        if (!_daKetThuc) {
-          _batDauTimer();
+    Future.delayed(const Duration(milliseconds: 200), () async {
+      try {
+        // Tạo deep copy của ban co để tránh modify original
+        final boardCopy = _banCo.map((row) => List<int>.from(row)).toList();
+        final diem = await compute(_timNuocDiMayIsolate, {
+          'board': boardCopy,
+          'doKho': _doKho,
+          'kichThuoc': _kichThuoc,
+        });
+        
+        if (diem != null && !_daKetThuc) {
+          datNuocDi(diem.item1, diem.item2, 2);
+          _luotNguoi = true;
+          setState(() {});
+          // Bắt đầu timer cho lượt người chơi tiếp theo
+          if (!_daKetThuc) {
+            _batDauTimer();
+          }
+        }
+      } catch (e) {
+        // Nếu có lỗi, dùng AI dễ
+        final diemFallback = _nuocDiNgauNhienCoTrongTam();
+        if (diemFallback != null && !_daKetThuc) {
+          datNuocDi(diemFallback.item1, diemFallback.item2, 2);
+          _luotNguoi = true;
+          setState(() {});
+          if (!_daKetThuc) {
+            _batDauTimer();
+          }
         }
       }
     });
@@ -977,20 +1003,59 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Text(
-                      '🎯 CARO vs AI 🎯',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            offset: Offset(2, 2),
-                            blurRadius: 4,
-                            color: Colors.black26,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '🎯 CARO vs AI 🎯',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(2, 2),
+                                blurRadius: 4,
+                                color: Colors.black26,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        // Đồng hồ đếm ngược nhỏ ở header
+                        if (_daBatDau && !_daKetThuc && _thoiGianConLai > 0 && _luotNguoi)
+                          ValueListenableBuilder<int>(
+                            valueListenable: _thoiGianNotifier,
+                            builder: (context, thoiGian, _) {
+                              return Container(
+                                margin: const EdgeInsets.only(left: 12),
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: thoiGian <= 5
+                                      ? Colors.red
+                                      : thoiGian <= 10
+                                      ? Colors.orange
+                                      : Colors.green,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  '⏱️ ${thoiGian}s',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -1098,50 +1163,6 @@ class _ManHinhGameCaroState extends State<ManHinhGameCaro> {
                   ],
                 ),
               ),
-
-              // Đồng hồ đếm ngược
-              if (_daBatDau && !_daKetThuc && _thoiGianConLai > 0 && _luotNguoi)
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: _thoiGianConLai <= 5
-                          ? [Colors.red.shade400, Colors.red.shade600]
-                          : _thoiGianConLai <= 10
-                          ? [Colors.orange.shade400, Colors.orange.shade600]
-                          : [Colors.blue.shade400, Colors.blue.shade600],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: (_thoiGianConLai <= 5
-                            ? Colors.red
-                            : _thoiGianConLai <= 10
-                            ? Colors.orange
-                            : Colors.blue).withValues(alpha: 0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.timer, color: Colors.white, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Thời gian: $_thoiGianConLai giây',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
 
               // Thông báo kết quả đẹp
               if (_thongBao.isNotEmpty)
@@ -1404,6 +1425,269 @@ class _Cap {
   final int item1;
   final int item2;
   const _Cap(this.item1, this.item2);
+}
+
+// Static function để chạy trong isolate
+_Cap? _timNuocDiMayIsolate(Map<String, dynamic> params) {
+  final List<List<int>> board = params['board'];
+  final String doKho = params['doKho'];
+  final int kichThuoc = params['kichThuoc'];
+  
+  final helper = _AICalculator(board, kichThuoc);
+  
+  switch (doKho) {
+    case 'de':
+      return helper.nuocDiDe();
+    case 'trung binh':
+      return helper.nuocDiTrungBinh();
+    case 'kho':
+      return helper.nuocDiKho();
+    default:
+      return helper.nuocDiDe();
+  }
+}
+
+// Helper class để tính AI trong isolate (không dùng instance variables)
+class _AICalculator {
+  final List<List<int>> _banCo;
+  final int _kichThuoc;
+  
+  _AICalculator(this._banCo, this._kichThuoc);
+  
+  List<_Cap> _lietKeOViTienMoRong(int banKinh) {
+    final Set<String> tap = {};
+    for (int r = 0; r < _kichThuoc; r++) {
+      for (int c = 0; c < _kichThuoc; c++) {
+        if (_banCo[r][c] == 0) continue;
+        for (int dr = -banKinh; dr <= banKinh; dr++) {
+          for (int dc = -banKinh; dc <= banKinh; dc++) {
+            final int rr = r + dr, cc = c + dc;
+            if (rr >= 0 && cc >= 0 && rr < _kichThuoc && cc < _kichThuoc && _banCo[rr][cc] == 0) {
+              tap.add('$rr,$cc');
+            }
+          }
+        }
+      }
+    }
+    final ds = tap.map((s) {
+      final p = s.split(',');
+      return _Cap(int.parse(p[0]), int.parse(p[1]));
+    }).toList();
+    if (ds.isEmpty) {
+      return [_Cap(_kichThuoc ~/ 2, _kichThuoc ~/ 2)];
+    }
+    return ds;
+  }
+  
+  bool _kiemTraThangThua(int r, int c, int nguoi) {
+    const List<List<int>> huong = [
+      [0, 1], // ngang
+      [1, 0], // doc
+      [1, 1], // cheo chinh
+      [1, -1], // cheo phu
+    ];
+    for (final h in huong) {
+      int dem = 1;
+      dem += _demHuong(r, c, h[0], h[1], nguoi);
+      dem += _demHuong(r, c, -h[0], -h[1], nguoi);
+      if (dem >= 5) return true;
+    }
+    return false;
+  }
+  
+  int _demHuong(int r, int c, int dr, int dc, int nguoi) {
+    int dem = 0;
+    int i = r + dr, j = c + dc;
+    while (i >= 0 && i < _kichThuoc && j >= 0 && j < _kichThuoc && _banCo[i][j] == nguoi) {
+      dem++;
+      i += dr;
+      j += dc;
+    }
+    return dem;
+  }
+  
+  _Cap? nuocDiDe() {
+    final tam = _kichThuoc ~/ 2;
+    final List<_Cap> trong = [];
+    
+    // Tìm ô trống xung quanh tâm
+    for (int r = tam - 6; r <= tam + 6; r++) {
+      for (int c = tam - 6; c <= tam + 6; c++) {
+        if (r >= 0 && c >= 0 && r < _kichThuoc && c < _kichThuoc && _banCo[r][c] == 0) {
+          trong.add(_Cap(r, c));
+        }
+      }
+    }
+    
+    if (trong.isEmpty) {
+      // Nếu không có ô quanh tâm, tìm ô trống bất kỳ
+      for (int r = 0; r < _kichThuoc; r++) {
+        for (int c = 0; c < _kichThuoc; c++) {
+          if (_banCo[r][c] == 0) trong.add(_Cap(r, c));
+        }
+      }
+    }
+    
+    if (trong.isEmpty) return null;
+    // Random một ô trống
+    trong.shuffle();
+    return trong.first;
+  }
+  
+  _Cap? nuocDiTrungBinh() {
+    final ds = _lietKeOViTienMoRong(3);
+
+    // 1) Tìm thắng ngay
+    for (final o in ds) {
+      _banCo[o.item1][o.item2] = 2;
+      final thang = _kiemTraThangThua(o.item1, o.item2, 2);
+      _banCo[o.item1][o.item2] = 0;
+      if (thang) return o;
+    }
+
+    // 2) Chặn thắng ngay
+    for (final o in ds) {
+      _banCo[o.item1][o.item2] = 1;
+      final thang = _kiemTraThangThua(o.item1, o.item2, 1);
+      _banCo[o.item1][o.item2] = 0;
+      if (thang) return o;
+    }
+
+    // 3) Heuristic đơn giản
+    if (ds.isNotEmpty) {
+      return ds[0];
+    }
+    return _Cap(_kichThuoc ~/ 2, _kichThuoc ~/ 2);
+  }
+  
+  _Cap? nuocDiKho() {
+    final ds = _lietKeOViTienMoRong(3);
+
+    // 1) Thắng ngay cho máy
+    for (final o in ds) {
+      _banCo[o.item1][o.item2] = 2;
+      final thang = _kiemTraThangThua(o.item1, o.item2, 2);
+      _banCo[o.item1][o.item2] = 0;
+      if (thang) return o;
+    }
+
+    // 2) Chặn thắng ngay của người chơi
+    for (final o in ds) {
+      _banCo[o.item1][o.item2] = 1;
+      final thang = _kiemTraThangThua(o.item1, o.item2, 1);
+      _banCo[o.item1][o.item2] = 0;
+      if (thang) return o;
+    }
+
+    // 3) Heuristic đơn giản
+    int diemTotNhat = -0x3f3f3f3f;
+    _Cap? nuocTotNhat;
+    
+    // Chỉ đánh giá top 8 ô tốt nhất để tránh tính toán quá nhiều
+    final dsSorted = [...ds];
+    if (dsSorted.length > 8) {
+      dsSorted.shuffle();
+      dsSorted.removeRange(8, dsSorted.length);
+    }
+    
+    for (final o in dsSorted) {
+      _banCo[o.item1][o.item2] = 2;
+      int diemMay = _tinhDiemNhanh(o.item1, o.item2, 2);
+      _banCo[o.item1][o.item2] = 0;
+      
+      _banCo[o.item1][o.item2] = 1;
+      int diemNguoi = _tinhDiemNhanh(o.item1, o.item2, 1);
+      _banCo[o.item1][o.item2] = 0;
+      
+      int tongDiem = diemMay * 3 - diemNguoi * 2;
+      
+      if (tongDiem > diemTotNhat) {
+        diemTotNhat = tongDiem;
+        nuocTotNhat = o;
+      }
+    }
+    
+    return nuocTotNhat ?? ds.first;
+  }
+  
+  int _tinhDiemNhanh(int r, int c, int nguoi) {
+    int diem = 0;
+    const List<List<int>> huong = [
+      [0, 1], [1, 0], [1, 1], [1, -1],
+    ];
+    
+    for (final h in huong) {
+      int dai = 1;
+      
+      // Đếm theo một hướng
+      int i = r + h[0], j = c + h[1];
+      while (i >= 0 && i < _kichThuoc && j >= 0 && j < _kichThuoc && _banCo[i][j] == nguoi) {
+        dai++;
+        i += h[0];
+        j += h[1];
+      }
+      
+      // Đếm theo hướng ngược lại
+      i = r - h[0];
+      j = c - h[1];
+      while (i >= 0 && i < _kichThuoc && j >= 0 && j < _kichThuoc && _banCo[i][j] == nguoi) {
+        dai++;
+        i -= h[0];
+        j -= h[1];
+      }
+      
+      // Đánh giá điểm dựa trên độ dài
+      if (dai >= 5) return 100000;
+      if (dai == 4) diem += 1000;
+      if (dai == 3) diem += 100;
+      if (dai == 2) diem += 10;
+    }
+    
+    return diem;
+  }
+  
+  int _danhGiaDonGian(int nguoi) {
+    int diem = 0;
+    const List<List<int>> huong = [
+      [0, 1], [1, 0], [1, 1], [1, -1],
+    ];
+    for (int r = 0; r < _kichThuoc; r++) {
+      for (int c = 0; c < _kichThuoc; c++) {
+        if (_banCo[r][c] != nguoi) continue;
+        for (final h in huong) {
+          diem += _diemChuoi(r, c, h[0], h[1], nguoi);
+        }
+      }
+    }
+    return diem;
+  }
+  
+  int _diemChuoi(int r, int c, int dr, int dc, int nguoi) {
+    int dai = 0;
+    int i = r, j = c;
+    while (i >= 0 && i < _kichThuoc && j >= 0 && j < _kichThuoc && _banCo[i][j] == nguoi) {
+      dai++;
+      i += dr;
+      j += dc;
+    }
+    final int r1 = r - dr, c1 = c - dc;
+    final int r2 = i, c2 = j;
+    bool chanDau = !(r1 >= 0 && r1 < _kichThuoc && c1 >= 0 && c1 < _kichThuoc && _banCo[r1][c1] == 0);
+    bool chanCuoi = !(r2 >= 0 && r2 < _kichThuoc && c2 >= 0 && c2 < _kichThuoc && _banCo[r2][c2] == 0);
+
+    if (dai >= 5) return 100000;
+    if (chanDau && chanCuoi) return 0;
+    switch (dai) {
+      case 4:
+        return chanDau || chanCuoi ? 1000 : 5000;
+      case 3:
+        return chanDau || chanCuoi ? 200 : 800;
+      case 2:
+        return chanDau || chanCuoi ? 30 : 100;
+      default:
+        return 5;
+    }
+  }
 }
 
 
