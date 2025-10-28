@@ -36,6 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.5.1
   shared_preferences: ^2.2.3
+  provider: ^6.1.1
+  intl: ^0.18.1
+  timeago: ^3.6.1
 
   # AI và Game Engine packages
   collection: ^1.18.0  # Cấu trúc dữ liệu tối ưu cho AI
@@ -46,6 +49,9 @@ dependencies:
   animations: ^2.0.11   # Animations cho game effects
   flutter_animate: ^4.5.0  # Advanced animations
   confetti: ^0.7.0      # Confetti effects khi thắng
+  jwt_decoder: ^2.0.1
+  http: ^1.5.0
+  flutter_dotenv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +69,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - .env
+    - images/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

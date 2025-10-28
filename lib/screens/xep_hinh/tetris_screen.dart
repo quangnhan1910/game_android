@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
 import '../../routes.dart';
+import '../../services/tetris_leaderboard_service.dart';
 
 class TetrisScreen extends StatefulWidget {
   const TetrisScreen({super.key});
@@ -24,6 +25,8 @@ class _TetrisScreenState extends State<TetrisScreen> {
   int level = 1;
   bool isGameOver = false;
   bool isPaused = false;
+  final TetrisLeaderboardService _leaderboardService =
+      TetrisLeaderboardService();
 
   // Tetris pieces
   final List<List<List<int>>> pieces = [
@@ -122,6 +125,7 @@ class _TetrisScreenState extends State<TetrisScreen> {
         isGameOver = true;
       });
       gameTimer?.cancel();
+      _showGameOverDialog();
     }
   }
 
@@ -266,6 +270,100 @@ class _TetrisScreenState extends State<TetrisScreen> {
     }
   }
 
+  void _showGameOverDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Game Over!',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.stars,
+                size: 64,
+                color: Colors.amber,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Điểm số: $score',
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Level: $level',
+                style: const TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                // Gửi điểm lên server
+                final result = await _leaderboardService.submitScore(
+                  score: score,
+                  level: level,
+                );
+                
+                if (mounted) {
+                  Navigator.of(context).pop();
+                  
+                  // Hiển thị kết quả
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(result['message'] ?? 'Đã gửi điểm'),
+                      backgroundColor: result['success'] == true
+                          ? Colors.green
+                          : Colors.red,
+                    ),
+                  );
+                  
+                  // Chuyển đến bảng xếp hạng
+                  if (result['success'] == true) {
+                    Navigator.pushNamed(context, AppRoutes.tetrisLeaderboard);
+                  }
+                }
+              },
+              child: const Text('Lưu điểm & Xem BXH'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, AppRoutes.tetrisLeaderboard);
+              },
+              child: const Text('Xem BXH'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _resetGame();
+              },
+              child: const Text('Chơi lại'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, AppRoutes.mainMenu);
+              },
+              child: const Text('Thoát'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
     gameTimer?.cancel();
@@ -283,6 +381,12 @@ class _TetrisScreenState extends State<TetrisScreen> {
           onPressed: () => Navigator.pushNamed(context, AppRoutes.mainMenu),
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.leaderboard),
+            onPressed: () =>
+                Navigator.pushNamed(context, AppRoutes.tetrisLeaderboard),
+            tooltip: 'Bảng xếp hạng',
+          ),
           IconButton(
             icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),
             onPressed: _togglePause,
